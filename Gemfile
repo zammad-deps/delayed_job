@@ -37,7 +37,7 @@ platforms :jruby do
   elsif ENV['RAILS_VERSION']
     gem 'railties', "~> #{ENV['RAILS_VERSION']}"
   else
-    gem 'railties', ['>= 3.0', '< 7.0']
+    gem 'railties', ['>= 3.0', '< 7.1']
   end
 end
 
@@ -49,12 +49,15 @@ group :test do
   if ENV['RAILS_VERSION'] == 'edge'
     gem 'actionmailer', :github => 'rails/rails'
     gem 'activerecord', :github => 'rails/rails'
+    gem 'railties', :github => 'rails/rails'
   elsif ENV['RAILS_VERSION']
     gem 'actionmailer', "~> #{ENV['RAILS_VERSION']}"
     gem 'activerecord', "~> #{ENV['RAILS_VERSION']}"
+    gem 'railties', "~> #{ENV['RAILS_VERSION']}"
   else
     gem 'actionmailer', ['>= 3.0', '< 7.1']
     gem 'activerecord', ['>= 3.0', '< 7.1']
+    gem 'railties', ['>= 3.0', '< 7.1']
   end
 
   gem 'rspec', '>= 3'
