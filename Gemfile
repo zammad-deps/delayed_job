@@ -59,7 +59,7 @@ group :test do
     gem 'activerecord', ['>= 3.0', '< 7.1']
     gem 'railties', ['>= 3.0', '< 7.1']
   end
-
+  gem 'net-smtp' if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0-dev')
   gem 'rspec', '>= 3'
   gem 'simplecov', :require => false
   if /\A2.[12]/ =~ RUBY_VERSION
