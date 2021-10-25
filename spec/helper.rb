@@ -38,6 +38,7 @@ end
 ENV['RAILS_ENV'] = 'test'
 
 FakeApp = Class.new(Rails::Application)
+FakeApp.config.eager_load = false
 
 Delayed::Worker.backend = :test
 
