@@ -30,6 +30,14 @@ platforms :jruby do
   end
   gem 'jruby-openssl'
   gem 'mime-types', ['~> 2.6', '< 2.99']
+
+  if ENV['RAILS_VERSION'] == 'edge'
+    gem 'railties', :github => 'rails/rails'
+  elsif ENV['RAILS_VERSION']
+    gem 'railties', "~> #{ENV['RAILS_VERSION']}"
+  else
+    gem 'railties', ['>= 3.0', '< 7.1']
+  end
 end
 
 platforms :rbx do
@@ -40,15 +48,12 @@ group :test do
   if ENV['RAILS_VERSION'] == 'edge'
     gem 'actionmailer', :github => 'rails/rails'
     gem 'activerecord', :github => 'rails/rails'
-    gem 'railties', :github => 'rails/rails'
   elsif ENV['RAILS_VERSION']
     gem 'actionmailer', "~> #{ENV['RAILS_VERSION']}"
     gem 'activerecord', "~> #{ENV['RAILS_VERSION']}"
-    gem 'railties', "~> #{ENV['RAILS_VERSION']}"
   else
     gem 'actionmailer', ['>= 3.0', '< 7.1']
     gem 'activerecord', ['>= 3.0', '< 7.1']
-    gem 'railties', ['>= 3.0', '< 7.1']
   end
   gem 'net-smtp' if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0')
   gem 'rspec', '>= 3'
