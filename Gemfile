@@ -64,6 +64,9 @@ group :test do
   else
     gem 'simplecov-lcov', :require => false
   end
+  if ENV['RAILS_VERSION'].nil? || ENV['RAILS_VERSION'] >= '6.0.0'
+    gem 'zeitwerk', :require => false
+  end
 end
 
 group :rubocop do
