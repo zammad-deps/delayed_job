@@ -71,6 +71,13 @@ group :test do
   else
     gem 'simplecov-lcov', :require => false
   end
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.3.0')
+    # New dependencies with a deprecation notice in Ruby 3.3 and required in Ruby 3.4
+    # Probably won't get released in rails 7.0
+    gem 'base64'
+    gem 'bigdecimal'
+    gem 'mutex_m'
+  end
   if ENV['RAILS_VERSION'].nil? || ENV['RAILS_VERSION'] >= '6.0.0'
     gem 'zeitwerk', :require => false
   end
