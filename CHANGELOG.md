@@ -1,3 +1,9 @@
+4.1.12 - 2024-08-14
+=======================
+* Add missing require for extract_options
+* Fix rails 7.2 ActiveSupport::ProxyObject deprecation
+* Multiple contributors on current and legacy test suite improvements
+
 4.1.12.rc1 - 2024-08-13
 =======================
 * Validating trusted publishing release
