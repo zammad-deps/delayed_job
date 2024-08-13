@@ -7,6 +7,8 @@ platforms :ruby do
   # Rails 6 now requires sqlite 1.4
   if ENV['RAILS_VERSION'] && ENV['RAILS_VERSION'] < '5.1'
     gem 'sqlite3', '< 1.4'
+  elsif ENV['RAILS_VERSION'] && ENV['RAILS_VERSION'] < '7.2'
+    gem 'sqlite3', '~> 1.4'
   else
     gem 'sqlite3'
   end
