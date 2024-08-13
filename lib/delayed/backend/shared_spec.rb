@@ -230,7 +230,7 @@ shared_examples_for 'a delayed_job backend' do
     end
 
     it 'reserves jobs scheduled for the past when time zones are involved' do
-      Time.zone = 'US/Eastern'
+      Time.zone = 'America/New_York'
       job = create_job :run_at => described_class.db_time_now - 1.minute
       expect(described_class.reserve(worker)).to eq(job)
     end
