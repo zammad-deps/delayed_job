@@ -1,10 +1,14 @@
 module Delayed
   class DelayProxy < BasicObject
-    undef_method :==
-    undef_method :equal?
+    # What additional methods exist on BasicObject has changed over time
+    (::BasicObject.instance_methods - [:__id__, :__send__, :instance_eval, :instance_exec]).each do |method|
+      undef_method method
+    end
 
     # Let DelayProxy raise exceptions.
-    define_method(:raise, ::Object.instance_method(:raise))
+    def raise(*args)
+      ::Object.send(:raise, *args)
+    end
 
     def initialize(payload_class, target, options)
       @payload_class = payload_class
