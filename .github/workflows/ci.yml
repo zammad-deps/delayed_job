@@ -95,7 +95,7 @@ jobs:
         RAILS_VERSION: ${{ matrix.rails_version }}
       run: bundle exec rspec
     - name: Coveralls Parallel
-      uses: coverallsapp/github-action@master
+      uses: coverallsapp/github-action@main
       with:
         github-token: ${{ secrets.github_token }}
         flag-name: run-${{ matrix.ruby }}-${{ matrix.rails_version }}
@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
+      uses: coverallsapp/github-action@main
       with:
         github-token: ${{ secrets.github_token }}
         parallel-finished: true
