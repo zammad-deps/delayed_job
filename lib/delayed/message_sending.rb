@@ -1,5 +1,11 @@
 module Delayed
   class DelayProxy < BasicObject
+    undef_method :==
+    undef_method :equal?
+
+    # Let DelayProxy raise exceptions.
+    define_method(:raise, ::Object.instance_method(:raise))
+
     def initialize(payload_class, target, options)
       @payload_class = payload_class
       @target = target
