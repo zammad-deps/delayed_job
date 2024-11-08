@@ -1,3 +1,7 @@
+4.1.13 - 2024-11-08
+=======================
+* Enable Rails 8
+
 4.1.12 - 2024-08-14
 =======================
 * Add missing require for extract_options
