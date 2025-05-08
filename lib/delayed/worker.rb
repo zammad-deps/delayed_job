@@ -37,14 +37,7 @@ module Delayed
     # name_prefix is ignored if name is set directly
     attr_accessor :name_prefix
 
-    # The lifecycle is used for registering callbacks for the worker lifecycle.
-    # It is also used for registering callbacks for the job lifecycle.
-
-    # The lifecycle is used for registering callbacks for the worker lifecycle.
-    # It is also used for registering callbacks for the job lifecycle.
-
-    # Lifecycle is used for registering callbacks for the worker lifecycle.
-
+    # The lifecycle is used for registering callbacks for the job lifecycle.
     thread_cattr_accessor :_lifecycle
 
     def self.reset
