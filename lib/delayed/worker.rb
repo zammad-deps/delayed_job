@@ -154,7 +154,10 @@ module Delayed
     # it crashed before.
     def name
       return @name unless @name.nil?
-      "#{name_prefix}host:#{Socket.gethostname} pid:#{Process.pid} tid:#{Thread.current.native_thread_id}" rescue "#{name_prefix}pid:#{Process.pid} tid:#{Thread.current.native_thread_id}"
+
+      process_thread_identifier = "pid:#{Process.pid} tid:#{Thread.current.native_thread_id} tid_object_id:#{Thread.current.object_id}"
+
+      "#{name_prefix}host:#{Socket.gethostname} #{process_thread_identifier}" rescue "#{name_prefix}#{process_thread_identifier}"
     end
 
     # Sets the name of the worker.
