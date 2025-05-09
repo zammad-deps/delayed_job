@@ -3,6 +3,7 @@ require 'active_support/dependencies'
 require 'active_support/core_ext/kernel/reporting'
 require 'active_support/core_ext/numeric/time'
 require 'active_support/core_ext/class/attribute_accessors'
+require 'active_support/core_ext/module/attribute_accessors_per_thread'
 require 'active_support/hash_with_indifferent_access'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'logger'
@@ -20,18 +21,24 @@ module Delayed
     DEFAULT_QUEUE_ATTRIBUTES = HashWithIndifferentAccess.new.freeze
     DEFAULT_READ_AHEAD       = 5
 
-    cattr_accessor :min_priority, :max_priority, :max_attempts, :max_run_time,
-                   :default_priority, :sleep_delay, :logger, :delay_jobs, :queues,
-                   :read_ahead, :plugins, :destroy_failed_jobs, :exit_on_complete,
-                   :default_log_level
+    # Jobs-running-specific settings as per #initialize
+    thread_cattr_accessor :min_priority, :max_priority, :sleep_delay, :read_ahead, :queues, :exit_on_complete
 
-    # Named queue into which jobs are enqueued by default
-    cattr_accessor :default_queue_name
+    # Lifecycle will be set if it's missing so it can be per-thread
+    thread_cattr_accessor :_lifecycle
 
-    cattr_reader :backend, :queue_attributes
+    # jobs-running-specific based on code, but seems to be rather global
+    cattr_accessor :max_attempts, :max_run_time, :destroy_failed_jobs
+
+    # global settings to be available in any thread
+    cattr_accessor :logger, :default_log_level, :delay_jobs, :default_priority, :default_queue_name, :plugins
+    cattr_accessor :backend, :queue_attributes
 
     # name_prefix is ignored if name is set directly
     attr_accessor :name_prefix
+
+    # The lifecycle is used for registering callbacks for the job lifecycle.
+    thread_cattr_accessor :_lifecycle
 
     def self.reset
       self.default_log_level = DEFAULT_LOG_LEVEL
@@ -43,7 +50,7 @@ module Delayed
       self.queues            = DEFAULT_QUEUES
       self.queue_attributes  = DEFAULT_QUEUE_ATTRIBUTES
       self.read_ahead        = DEFAULT_READ_AHEAD
-      @lifecycle             = nil
+      self._lifecycle        = nil
     end
 
     # Add or remove plugins in this list before the worker is instantiated
@@ -106,13 +113,13 @@ module Delayed
 
     def self.lifecycle
       # In case a worker has not been set up, job enqueueing needs a lifecycle.
-      setup_lifecycle unless @lifecycle
+      setup_lifecycle unless _lifecycle
 
-      @lifecycle
+      _lifecycle
     end
 
     def self.setup_lifecycle
-      @lifecycle = Delayed::Lifecycle.new
+      self._lifecycle = Delayed::Lifecycle.new
       plugins.each { |klass| klass.new }
     end
 
@@ -147,7 +154,10 @@ module Delayed
     # it crashed before.
     def name
       return @name unless @name.nil?
-      "#{@name_prefix}host:#{Socket.gethostname} pid:#{Process.pid}" rescue "#{@name_prefix}pid:#{Process.pid}"
+
+      process_thread_identifier = "pid:#{Process.pid} tid:#{Thread.current.object_id}"
+
+      "#{name_prefix}host:#{Socket.gethostname} #{process_thread_identifier}" rescue "#{name_prefix}#{process_thread_identifier}"
     end
 
     # Sets the name of the worker.
