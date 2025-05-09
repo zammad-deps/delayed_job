@@ -155,7 +155,7 @@ module Delayed
     def name
       return @name unless @name.nil?
 
-      process_thread_identifier = "pid:#{Process.pid} tid:#{Thread.current.native_thread_id} tid_object_id:#{Thread.current.object_id}"
+      process_thread_identifier = "pid:#{Process.pid} tid:#{Thread.current.object_id}"
 
       "#{name_prefix}host:#{Socket.gethostname} #{process_thread_identifier}" rescue "#{name_prefix}#{process_thread_identifier}"
     end
